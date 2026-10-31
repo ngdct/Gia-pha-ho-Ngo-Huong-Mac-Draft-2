@@ -1,0 +1,28 @@
+name: Build Gia Pha Ho Ngo APK
+
+on:
+  push:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Unzip Project
+        run: unzip -o *.zip || true
+      - uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+      - uses: gradle/actions/setup-gradle@v3
+        with:
+          gradle-version: '8.5'
+      - name: Build APK
+        run: |
+          cd GiaPhaHoNgo_Android_APK_Project 2>/dev/null || true
+          gradle assembleDebug
+      - uses: actions/upload-artifact@v4
+        with:
+          name: GiaPhaHoNgo-Android-APK
+          path: "**/app/build/outputs/apk/debug/*.apk"
